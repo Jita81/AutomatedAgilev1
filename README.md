@@ -1,6 +1,10 @@
-# AutomatedAgilev1
+# AutomatedAgilev1 Template
 
-An AI-driven agile development pipeline with specialized branch workflows for different phases of software development.
+🎯 **Template Repository** for AI-driven agile development pipeline with specialized branch workflows.
+
+## 📋 Use This Template
+
+This is a template repository designed to be forked/cloned for actual development projects. It provides a complete AI-optimized branch structure for agile development workflows.
 
 ## 🏗️ Branch Structure
 
@@ -26,34 +30,41 @@ main (coordination only)
     └── x-context-engineering/      → Cross-project coordination
 ```
 
-## 🚀 How to Use
+## 🚀 How to Use This Template
 
-### 1. Setup
+### 1. Create Your Project from Template
 ```bash
-# Initialize all branches with AI-optimized structure
-./setup/setup-branches.sh
+# Option 1: Use GitHub's "Use this template" button (recommended)
+# Click "Use this template" on GitHub to create a new repository
+
+# Option 2: Clone this template locally
+git clone https://github.com/Jita81/AutomatedAgilev1.git your-project-name
+cd your-project-name
+git remote set-url origin https://github.com/yourusername/your-project-name.git
 ```
 
-### 2. Working with Specialized Branches
-
-Each branch contains:
-- **`ai-instructions/`** - AI prompts and guidance for that use case
-- **`context/`** - Relevant context and knowledge base
-- **`rules/`** - Branch-specific rules and constraints
-- **`.cursorrules`** - Cursor IDE commands for that workflow
-
-### 3. Example Workflow
+### 2. Start Your Development Workflow
 ```bash
-# Work on requirements
-git checkout discovery/2-requirements
-# Branch now has AI instructions optimized for requirements gathering
-# Cursor rules provide commands specific to requirements work
+# Switch to any specialized branch for AI-optimized development
+git checkout discovery/1-project-overview  # Project charter & vision
+git checkout discovery/2-requirements      # Requirements gathering  
+git checkout discovery/3-architecture      # System architecture
+git checkout modules/9-module-development  # Module implementation
 
-# Work on module development  
-git checkout modules/9-module-development
-# Branch now has AI instructions optimized for coding
-# Cursor rules provide commands for development workflow
+# Each branch provides:
+# ✅ .cursorrules - Cursor IDE commands for that workflow
+# ✅ ai-instructions/ - AI prompts optimized for that phase
+# ✅ context/ - Templates and best practices
+# ✅ rules/ - Quality standards and constraints
+# ✅ docs/ - Deliverables folder (merges to main)
 ```
+
+### 3. Template Features Ready to Use
+- **12 specialized branches** with AI-optimized workflows
+- **Branch isolation** - AI context stays in branches, deliverables merge to main
+- **Cursor integration** - Specialized commands for each development phase
+- **Quality standards** - Built-in rules and constraints for each workflow
+- **Template libraries** - Context and examples for best practices
 
 ## 🧠 Branch Isolation
 
