@@ -1,28 +1,13 @@
-# Basic .gitignore for fresh repository
+# Branch-specific AI files - keep these in branch, don't merge to main
+ai-instructions/
+context/
+rules/
+.cursorrules
 
-# Development artifacts
-node_modules/
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Build outputs
-dist/
-build/
-*.log
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Temporary files
-*.tmp
-*.temp 
+# Allow actual deliverables to merge to main
+!docs/
+!src/
+!*.md
+!*.json
+!*.yml
+!*.yaml
