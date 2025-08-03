@@ -1,0 +1,45 @@
+# Branch Context Manager Service
+# Manages AI context switching and branch coordination
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    bash \
+    curl \
+    jq
+
+# Install Node.js dependencies for branch management
+RUN npm install -g \
+    simple-git \
+    ioredis \
+    pg \
+    express \
+    cors \
+    helmet
+
+# Copy branch management scripts
+COPY deployment/scripts/branch-manager/ ./
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Create branch context cache directory
+RUN mkdir -p /app/cache/contexts
+
+# Set permissions
+RUN chmod +x scripts/*.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Expose port
+EXPOSE 8080
+
+# Start branch manager service
+CMD ["node", "server.js"]

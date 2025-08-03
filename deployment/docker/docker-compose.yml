@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # Main application
+  automatedagile-app:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+      target: development
+    container_name: automatedagile-app
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    volumes:
+      - ../..:/app
+      - /app/node_modules
+      - git-data:/app/.git
+    environment:
+      - NODE_ENV=development
+      - BRANCH_CONTEXT=main
+      - CURSOR_ENABLED=true
+      - AI_OPTIMIZATION=true
+    networks:
+      - automatedagile-network
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: automatedagile-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - automatedagile-network
+    restart: unless-stopped
+
+  # PostgreSQL for metadata and project data
+  postgres:
+    image: postgres:15-alpine
+    container_name: automatedagile-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=automatedagile
+      - POSTGRES_USER=agile_user
+      - POSTGRES_PASSWORD=secure_password_123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - automatedagile-network
+    restart: unless-stopped
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: automatedagile-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - automatedagile-app
+    networks:
+      - automatedagile-network
+    restart: unless-stopped
+
+  # Branch context manager
+  branch-manager:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile.branch-manager
+    container_name: automatedagile-branch-manager
+    volumes:
+      - ../..:/app
+      - git-data:/app/.git
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - POSTGRES_URL=postgresql://agile_user:secure_password_123@postgres:5432/automatedagile
+    networks:
+      - automatedagile-network
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  git-data:
+    driver: local
+
+networks:
+  automatedagile-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
